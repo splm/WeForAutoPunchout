@@ -16,6 +16,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <service
+            android:name=".service.EnvelopeService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:process=":monitor">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility" />
+        </service>
+
+        <service android:name=".service.LongRunningService" />
+
+        <receiver android:name=".broadcast.StartPunchoutServiceBroadcast" />
+
     </application>
 
 </manifest>
