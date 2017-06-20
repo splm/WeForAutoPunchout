@@ -1,14 +1,7 @@
 package me.splm.app.autopunchout.service;
 
 import android.accessibilityservice.AccessibilityService;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -37,7 +30,7 @@ public class EnvelopeService extends AccessibilityService {
                         String content = c.toString();
                         if (content.contains("[Punchout]")) {
                             Log.e(TAG, "onAccessibilityEvent: 包含目标字符串");
-                            openWXAPP();
+                            OpenSysUI.openAPP(this,TARGETPACKAGE);
                             break;
                         }
                     }
@@ -49,7 +42,6 @@ public class EnvelopeService extends AccessibilityService {
                 if (TARGETPACKAGE.equals(event.getPackageName())) {
                     findTagToClick("工作台");
                     findTagToClick("打卡");
-//                    findTagToClick("次");
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -75,10 +67,6 @@ public class EnvelopeService extends AccessibilityService {
         }
     }
 
-    public void openWXAPP() {
-        Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage(TARGETPACKAGE);
-        startActivity(LaunchIntent);
-    }
 
     @Override
     public void onInterrupt() {
@@ -140,7 +128,6 @@ public class EnvelopeService extends AccessibilityService {
         if (isFull) {
             Log.e(TAG, "findTag: 3");
             AccessibilityNodeInfo n = list.get(0);
-            Log.e(TAG, "findTag: size==" + list.size());
             if (n != null) {
                 return n;
             }
@@ -160,48 +147,5 @@ public class EnvelopeService extends AccessibilityService {
                 nodeInfo.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
-    }
-
-    private Handler mClientHandler = new ClientHandler();
-    private Messenger mClientMessenger = new Messenger(mClientHandler);
-
-    private class ClientHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                    Log.e(TAG, "handleMessage: 接收到服务端的消息");
-                    break;
-            }
-        }
-    }
-
-    private class InnerConnOfLongrunService implements ServiceConnection {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Messenger serverMessenger = new Messenger(service);
-            Message toServerMsg = Message.obtain(null, 1);
-            toServerMsg.replyTo = mClientMessenger;
-            try {
-                serverMessenger.send(toServerMsg);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    }
-
-    private ServiceConnection mConnection = new InnerConnOfLongrunService();
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Intent intent = new Intent(this, LongRunningService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 }

@@ -6,19 +6,21 @@
     android:orientation="vertical"
     tools:context="me.splm.app.autopunchout.MainActivity">
 
-    <TextView
-        android:id="@+id/click_tv"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/click1_btn"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:clickable="false"
-        android:text="click" />
+        android:text="测试弹出通知栏" />
 
     <Button
         android:id="@+id/click2_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:clickable="false"
-        android:text="clean" />
+        android:text="清空通知栏" />
 
 
 </LinearLayout>

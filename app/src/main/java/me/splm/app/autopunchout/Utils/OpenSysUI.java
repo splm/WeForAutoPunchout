@@ -10,20 +10,25 @@ import me.splm.app.autopunchout.R;
 
 
 public class OpenSysUI {
-    public static void openSetting(Context context){
+    public static void openSetting(Context context) {
         Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
-    private static NotificationManager getNotificationMananger(Context context){
+    public static void openAPP(Context context,String packageName) {
+        Intent LaunchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        context.startActivity(LaunchIntent);
+    }
+
+    private static NotificationManager getNotificationMananger(Context context) {
         //获取NotificationManager实例
-        NotificationManager notifyManager = (NotificationManager)context. getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         return notifyManager;
     }
 
     public static void sendNotification(Context context) {
-        NotificationManager notifyManager=getNotificationMananger(context);
+        NotificationManager notifyManager = getNotificationMananger(context);
         //实例化NotificationCompat.Builde并设置相关属性
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setTicker("[Punchout] is comming!")
@@ -40,8 +45,8 @@ public class OpenSysUI {
         notifyManager.notify(1, builder.build());
     }
 
-    public static void cleanAllNotification(Context context){
-        NotificationManager notifyManager=getNotificationMananger(context);
+    public static void cleanAllNotification(Context context) {
+        NotificationManager notifyManager = getNotificationMananger(context);
         notifyManager.cancelAll();
     }
 }

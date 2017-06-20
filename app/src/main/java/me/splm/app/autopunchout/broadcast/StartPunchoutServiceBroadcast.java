@@ -17,6 +17,7 @@ public class StartPunchoutServiceBroadcast extends BroadcastReceiver {
         Log.e("***************", "onReceive: 接收到的轮询信息");
         String serviceName = EnvelopeService.class.getCanonicalName();
         boolean isWorking = ServiceUtils.isServiceWork(context, serviceName);
+//        ServiceUtils.buildAlarmanger(context);
         Log.e(TAG, "onReceive: 启动Setting设置界面");
         OpenSysUI.sendNotification(context);
     }
